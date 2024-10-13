@@ -1,4 +1,4 @@
-<img height="480" src="./merlian.webp" title="logo" width="720"/>
+![](./merlian.webp "logo")
 
 ## prerequisites
 
