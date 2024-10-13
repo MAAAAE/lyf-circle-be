@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: shlong-mvn
+
+#  ai:
+#    openai:
+#      chat:
+#        options:
+#          model: gpt-4o
+
+
+  datasource:
+    password: secret
+    username: myuser
+    url: jdbc:postgresql://localhost/mydatabase
+
+  threads:
+    virtual:
+      enabled: true
+
+  ai:
+    vectorstore:
+      pgvector:
+        remove-existing-vector-store-table: true
+        initialize-schema: true
+  data:
+    jdbc:
+      dialect: postgresql
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8080
+
