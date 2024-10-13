@@ -11,5 +11,5 @@ docker compose up -d
 ## how to test
 
 ```
-GET http://localhost:8080/ai?prompt=<your prompt>
+GET http://localhost:8080/event/create?prompt=<your prompt>
 ```
