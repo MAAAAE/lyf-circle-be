@@ -16,7 +16,7 @@ class eventController {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
 
-    @GetMapping("/ai")
+    @GetMapping("/event/create")
     String generateEvent(@RequestParam(value = "prompt", defaultValue = "make a 3 events.") String userInput) {
         return this.chatClient.prompt()
                 .system("""

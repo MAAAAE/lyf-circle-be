@@ -7,3 +7,9 @@ export SPRING_AI_OPENAI_API_KEY=<INSERT KEY HERE>
 docker compose up -d
 ```
 
+
+## how to test
+
+```
+GET http://localhost:8080/ai?prompt=<your prompt>
+```
