@@ -13,11 +13,9 @@ public record CreateUserRequest(
         @NotEmpty String nickname,
         @NotEmpty List<String> langs,
         String country,
-        @Size(min = 1, message = "At least one language is required")
-        @Valid
+        @NotEmpty @Size(min = 1, message = "At least one language is required")
         List<@NotEmpty(message = "Hobby cannot be empty") String> hobbies,
-        @Size(min = 1, message = "At least one language is required")
-        @Valid
+        @NotEmpty @Size(min = 1, message = "At least one language is required")
         List<@NotEmpty(message = "Hobby cannot be empty") String> characteristics
 ) {
     public Users toDocument() {
