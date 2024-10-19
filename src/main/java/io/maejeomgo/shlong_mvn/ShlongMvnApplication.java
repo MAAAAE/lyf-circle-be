@@ -43,14 +43,14 @@ public class ShlongMvnApplication {
 
         return args -> {
             vectorStore.add(documents);
-            vectorStore.similaritySearch("coworking place").forEach(doc -> {
-                log.info("Similar Document: {}", doc.getContent());
-            });
 
-            vectorStore.add(userDocuments);
-            vectorStore.similaritySearch("extrovert person").forEach(doc -> {
-                log.info("Similar Document: {}", doc.getContent());
-            });
+//            vectorStore.similaritySearch("coworking place").forEach(doc -> {
+//                log.info("Similar Document: {}", doc.getContent());
+//            });
+//            vectorStore.similaritySearch("extrovert person").forEach(doc -> {
+//            vectorStore.add(userDocuments);
+//                log.info("Similar Document: {}", doc.getContent());
+//            });
 
 //			// Ingest the document into the vector store
 //			vectorStore.write(

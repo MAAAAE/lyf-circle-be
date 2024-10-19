@@ -26,6 +26,10 @@ spring:
   data:
     jdbc:
       dialect: postgresql
+    mongodb:
+      uri: mongodb://root:rootpassword@localhost:27017/mydatabase?authSource=admin
+
+
   jpa:
     hibernate:
       ddl-auto: update

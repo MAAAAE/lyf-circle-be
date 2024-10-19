@@ -11,3 +11,14 @@ services:
       - '5432:5432'
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"  # 호스트의 포트 27017을 컨테이너의 27017로 매핑
+    volumes:
+      - ./mongo-data:/data/db  # MongoDB 데이터를 호스트에 저장
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
