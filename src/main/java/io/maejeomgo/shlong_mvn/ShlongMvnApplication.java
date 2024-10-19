@@ -2,12 +2,10 @@ package io.maejeomgo.shlong_mvn;
 
 
 import io.maejeomgo.shlong_mvn.amenities.Amenity;
-import io.maejeomgo.shlong_mvn.user.UserData;
+import io.maejeomgo.shlong_mvn.user.MockUserGenerator;
+import io.maejeomgo.shlong_mvn.user.Users;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.embedding.EmbeddingModel;
-import org.springframework.ai.reader.TextReader;
-import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -15,6 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,12 @@ import java.util.Map;
 @SpringBootApplication
 public class ShlongMvnApplication {
 
+    private final boolean clearDataOnStartup;
+
+    public ShlongMvnApplication(@Value("${mongodb.clear-data-on-startup:false}") boolean clearDataOnStartup) {
+        this.clearDataOnStartup = clearDataOnStartup;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(ShlongMvnApplication.class, args);
     }
@@ -30,19 +35,22 @@ public class ShlongMvnApplication {
 
     @Bean
     CommandLineRunner ingestTermOfServiceToVectorStore(
-            EmbeddingModel embeddingModel, VectorStore vectorStore,
+            MongoTemplate mongoTemplate,
+            VectorStore vectorStore,
             @Value("classpath:rag/terms-of-service.txt") Resource termsOfServiceDocs) {
 
         List<Document> documents = initAmenities().stream().map(
                 it -> new Document("amenity: " + it.name() + " " + it.description(), Map.of("description", it.description(), "hours", it.hours(), "location", it.location(), "meta", "amenity"))
         ).toList();
 
-        List<Document> userDocuments = UserData.initUsers().stream().map(
-                it -> new Document("guest: " + it.name() + " " + it.age() + " hosting?:" + it.hosting() + " " + it.hobbies() + " " + it.characteristics(), Map.of("meta", "user"))
-        ).toList();
+        List<Document> userDocuments = MockUserGenerator.initUsers().stream().map(Users::createContentForVector)
+                .toList();
 
         return args -> {
+            clearMongoDb(mongoTemplate);
+
             vectorStore.add(documents);
+            vectorStore.add(userDocuments);
 
 //            vectorStore.similaritySearch("coworking place").forEach(doc -> {
 //                log.info("Similar Document: {}", doc.getContent());
@@ -57,10 +65,21 @@ public class ShlongMvnApplication {
 //					new TokenTextSplitter().transform(
 //							new TextReader(termsOfServiceDocs).read()));
 //
-//			vectorStore.similaritySearch("Cancelling Bookings").forEach(doc -> {
-//				log.info("Similar Document: {}", doc.getContent());
-//			});
+			vectorStore.similaritySearch("game").forEach(doc -> {
+				log.info("Similar Document: {}", doc.getContent());
+			});
+
         };
+    }
+
+    private void clearMongoDb(MongoTemplate mongoTemplate) {
+        if (clearDataOnStartup) {
+            // 모든 컬렉션 삭제
+            mongoTemplate.getDb().drop();
+            System.out.println("All MongoDB collections have been dropped.");
+        } else {
+            System.out.println("MongoDB data deletion is disabled.");
+        }
     }
 
     private List<Amenity> initAmenities() {
