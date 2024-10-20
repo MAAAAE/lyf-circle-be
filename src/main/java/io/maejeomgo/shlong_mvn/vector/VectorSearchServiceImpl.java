@@ -6,7 +6,6 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +16,7 @@ public class VectorSearchServiceImpl implements VectorService {
 
     private final VectorStore vectorStore;
 
+    @Override
     public List<Document> getUsersByQuery(@NotEmpty String query) {
         FilterExpressionBuilder b = new FilterExpressionBuilder();
 
@@ -28,6 +28,8 @@ public class VectorSearchServiceImpl implements VectorService {
                         .withFilterExpression(b.eq("type", "user").build())
         );
     }
+
+    @Override
     public List<Document> getAmenityByQuery(@NotEmpty String query) {
         FilterExpressionBuilder b = new FilterExpressionBuilder();
 

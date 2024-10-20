@@ -1,14 +1,12 @@
 package io.maejeomgo.shlong_mvn;
 
 
-import io.maejeomgo.shlong_mvn.amenities.Amenity;
+import io.maejeomgo.shlong_mvn.amenities.AmenityDto;
 import io.maejeomgo.shlong_mvn.user.MockUserGenerator;
 import io.maejeomgo.shlong_mvn.user.Users;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -79,33 +77,33 @@ public class ShlongMvnApplication {
         }
     }
 
-    private List<Amenity> initAmenities() {
+    private List<AmenityDto> initAmenities() {
         return List.of(
-                new Amenity(
+                new AmenityDto(
                         "SAY HI",
                         "Your lyf journey begins here! Say hi to our lyf guard and grab a cuppa and some local bites while you check-in with our mobile app.",
                         "24 Hours",
                         "Level 4"
                 ),
-                new Amenity(
+                new AmenityDto(
                         "CONNECT - COWORKING LOUNGE",
                         "Get comfy in the communal lounge: work if you must, but if it's a break you're after, there are indulgent couches to chill in and open spaces to work from.",
                         "24 Hours",
                         "Level 4"
                 ),
-                new Amenity(
+                new AmenityDto(
                         "WASH AND HANG - LAUNDERETTE",
                         "Dreary chores are a thing of the past. Load your laundry, then read, chat or chill with a beer while your clothes get cleaned.",
                         "24 Hours",
                         "Level 4"
                 ),
-                new Amenity(
+                new AmenityDto(
                         "BOND - SOCIAL KITCHEN",
                         "Nothing brings people together like good food in the social kitchen – whip up culinary storms or pick up new recipes from like-minded travellers from around the globe.",
                         "24 Hours",
                         "Level 5"
                 ),
-                new Amenity(
+                new AmenityDto(
                         "BURN - SOCIAL GYM",
                         "Work up a sweat in lyf's life-sized giant hamster wheel that functions as a quirky treadmill, or train up your core with our TRX bands. Gym-ing has never been so fun!",
                         "24 Hours",

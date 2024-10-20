@@ -41,6 +41,7 @@ class EventController {
     @GetMapping("/event")
     List<Event> getAllEvents() {
         log.info("get all events");
+
         return eventService.getAllEvents();
     }
 }
