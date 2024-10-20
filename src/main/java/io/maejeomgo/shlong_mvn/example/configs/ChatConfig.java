@@ -1,4 +1,4 @@
-package io.maejeomgo.shlong_mvn.chat.configs;
+package io.maejeomgo.shlong_mvn.example.configs;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;

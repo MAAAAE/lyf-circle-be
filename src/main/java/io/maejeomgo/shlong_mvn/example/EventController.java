@@ -1,4 +1,4 @@
-package io.maejeomgo.shlong_mvn.chat;
+package io.maejeomgo.shlong_mvn.example;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-class eventController {
+class EventController {
 
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
