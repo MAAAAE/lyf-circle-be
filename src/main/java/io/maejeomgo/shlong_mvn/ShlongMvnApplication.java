@@ -6,7 +6,9 @@ import io.maejeomgo.shlong_mvn.user.MockUserGenerator;
 import io.maejeomgo.shlong_mvn.user.Users;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -40,7 +42,7 @@ public class ShlongMvnApplication {
             @Value("classpath:rag/terms-of-service.txt") Resource termsOfServiceDocs) {
 
         List<Document> documents = initAmenities().stream().map(
-                it -> new Document("amenity: " + it.name() + " " + it.description(), Map.of("description", it.description(), "hours", it.hours(), "location", it.location(), "meta", "amenity"))
+                it -> new Document("amenity: " + it.name() + " " + it.description(), Map.of("description", it.description(), "hours", it.hours(), "location", it.location(), "type", "amenity"))
         ).toList();
 
         List<Document> userDocuments = MockUserGenerator.initUsers().stream().map(Users::createContentForVector)
@@ -64,11 +66,6 @@ public class ShlongMvnApplication {
 //			vectorStore.write(
 //					new TokenTextSplitter().transform(
 //							new TextReader(termsOfServiceDocs).read()));
-//
-			vectorStore.similaritySearch("game").forEach(doc -> {
-				log.info("Similar Document: {}", doc.getContent());
-			});
-
         };
     }
 
