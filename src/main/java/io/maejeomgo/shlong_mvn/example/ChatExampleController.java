@@ -1,4 +1,4 @@
-package io.maejeomgo.shlong_mvn.chat;
+package io.maejeomgo.shlong_mvn.example;
 
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -13,12 +13,12 @@ import reactor.core.publisher.Flux;
 import java.util.Map;
 
 @RestController
-public class ChatController {
+public class ChatExampleController {
 
     private final OpenAiChatModel chatModel;
 
     @Autowired
-    public ChatController(OpenAiChatModel chatModel) {
+    public ChatExampleController(OpenAiChatModel chatModel) {
         this.chatModel = chatModel;
     }
 
