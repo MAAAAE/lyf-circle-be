@@ -32,15 +32,18 @@ public class ChatController {
         headerAccessor.setUser(new StompPrincipal(chatMessageRequest.getSender()));
 
         if (chatService.isFirstTimeEntering(eventId, chatMessageRequest.getSender())) {
-            System.out.println("HELLO!");
-            chatMessageRequest.setType(ChatType.JOIN);
-            chatMessageRequest.setContent("안녕하세요! 누구누구님이 입장하였습니다.");
-            chatMessageRequest.setEventId(eventId);
+            chatMessageRequest.setType(ChatType.CHAT);
             // TODO: User가 진입했을 때, AI가 채팅을 보내준다.
+            chatMessageRequest.setContent(aiResponse(chatMessageRequest.getSender()));
+            chatMessageRequest.setEventId(eventId);
             chatService.sendAndSaveMessage(chatMessageRequest);
+            return;
         }
-        System.out.println("History!");
         chatService.sendChatHistoryToUser(eventId, chatMessageRequest.getSender());
+    }
+
+    private String aiResponse(String user) {
+        return String.format("안녕하세요! %s님이 입장하였습니다.", user);
     }
 }
 
