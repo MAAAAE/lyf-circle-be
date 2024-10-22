@@ -7,6 +7,7 @@ import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,5 +44,11 @@ class EventController {
         log.info("get all events");
 
         return eventService.getAllEvents();
+    }
+    @PostMapping("/event")
+    List<Event> makeNewEvents() {
+        log.info("make new events..");
+
+        return eventService.makeEvents();
     }
 }

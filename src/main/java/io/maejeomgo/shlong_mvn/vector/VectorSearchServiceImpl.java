@@ -2,6 +2,7 @@ package io.maejeomgo.shlong_mvn.vector;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -15,6 +16,7 @@ import java.util.List;
 public class VectorSearchServiceImpl implements VectorService {
 
     private final VectorStore vectorStore;
+    private final ChatClient chatClient;
 
     @Override
     public List<Document> getUsersByQuery(@NotEmpty String query) {

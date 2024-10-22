@@ -3,6 +3,7 @@ package io.maejeomgo.shlong_mvn.event;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,9 +20,11 @@ public class Event {
     @Id
     private String id;
     private String name;
-    private LocalDateTime date;
+    private EventDate date;
+    private int participants;
     private String emoji;
     private String location;
     private String description;
-    private List<String> participants;
+    private boolean hasNewMessages;
+    private List<Detail> details;
 }
