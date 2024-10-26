@@ -42,6 +42,6 @@ server:
   port: 8080
 
 mongodb:
-  clear-data-on-startup: true
+  clear-data-on-startup: false
 
 

@@ -8,13 +8,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
-import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,50 +40,64 @@ public class EventServiceImpl implements EventService {
     public List<Event> makeEvents() {
         List<Amenity> amenities = amenityRepository.findAll();
         List<Amenity> mockAmens = amenities.subList(1, amenities.size());
+        List<Event> created = new ArrayList<>();
 
         for (Amenity amenity : mockAmens) {
             log.info(amenity.getTitle());
-            List<Document> users = vectorService.getUsersByQuery(amenity.getTitle());
+//            List<Document> users = vectorService.getUsersByQuery(amenity.getTitle());
 
             log.info("====");
-            users.forEach(v -> log.info(String.valueOf(v)));
+//            users.forEach(v -> log.info(String.valueOf(v)));
             log.info("====");
 
-            createEvent(amenity.getTitle());
+            created.add(createEvent(amenity.getTitle()));
             break;
 
         }
 
-        return eventRepository.findAll();
+        return created;
+    }
+
+    @Override
+    public Event makeEvent(int amenityId) {
+        Amenity amenity = amenityRepository.findById(amenityId)
+                .orElseThrow(() -> new RuntimeException("amenity not found"));
+        return createEvent(amenity.getTitle());
     }
 
 
-    private void createEvent(String amenity) {
+    private Event createEvent(String amenity) {
         FilterExpressionBuilder b = new FilterExpressionBuilder();
 
         String content = chatClient.prompt()
                 .system("""
-                        you have to give response with json type. key is same with below. start with '{' for parsing as a json in my system.
-                        value is all english. date will be today.
-                        example: 
+                        You are an AI designed to create event details in given JSON format.\s
+                        You will receive input data containing name of a specified amenity and a list of users who have similar preferences.\s
+                        Your task is to generate an event that is suitable for the specified amenity. and can easily hang out users that I give to you. \s
+                        value is all english. date will be today.\s
+                        your response must start with '{' for parsing json in my system.
+                       \s
+                         The response must be structured as follows:
                         {
-                              "name": "도심 속 힐링 요가 클래스",
+                              "name": "event name",
                               "date": { "month": 5, "day": 20, "weekday": "토", "time": "15:00" },
-                              "participants": 3,
-                              "emoji": "🧘",
-                              "location": "서울숲 공원",
+                              "participants": the number of users,
+                              "emoji": "",
+                              "location": "amenity name",
                               "description": "",
-                              "hasNewMessages": true,
+                              "hasNewMessages": true or false,
                               "details": [
                                 { "title": "prepare", "content": "편한 복장, 물, 요가 매트 (대여 가능)" },
                                 { "title": "소요 시간", "content": "약 1시간 30분" },
                                 { "title": "난이도", "content": "초급 ~ 중급" },
                                 { "title": "인원 제한", "content": "최대 10명" }
-                              ]
+                              ],
+                              "users": list of user's nickname that I give to you
                             }
-                        """)
+                       \s""")
 
-                .user("Create an event that the given users can commonly enjoy at amenity:" + amenity + " without event host: ")
+//                .user("Create an event that the given users can commonly enjoy at amenity:" + amenity + " without event host: ")
+                .user("Given the specified amenity and users with similar preferences, generate an creative event that participants can mutually enjoy" + amenity + " without event host")
                 .advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults()
                         .withQuery(amenity)
                         .withTopK(5)
@@ -96,8 +109,10 @@ public class EventServiceImpl implements EventService {
 
         Event entity = saveJsonToMongo(content);
         if (Objects.nonNull(entity)) {
-            eventRepository.save(entity);
+            return eventRepository.save(entity);
         }
+
+        return null;
     }
 
     public Event saveJsonToMongo(String jsonString) {

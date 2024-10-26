@@ -16,7 +16,6 @@ import java.util.List;
 public class VectorSearchServiceImpl implements VectorService {
 
     private final VectorStore vectorStore;
-    private final ChatClient chatClient;
 
     @Override
     public List<Document> getUsersByQuery(@NotEmpty String query) {

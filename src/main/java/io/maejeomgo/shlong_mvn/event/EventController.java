@@ -1,15 +1,14 @@
 package io.maejeomgo.shlong_mvn.event;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,10 +44,16 @@ class EventController {
 
         return eventService.getAllEvents();
     }
-    @PostMapping("/event")
+    @PostMapping("/event/all")
     List<Event> makeNewEvents() {
         log.info("make new events..");
 
         return eventService.makeEvents();
+    }
+    @PostMapping("/event/{amenityId}")
+    Event makeNewEvent(@PathVariable @PositiveOrZero int amenityId) {
+        log.info("make new events for {}", amenityId);
+
+        return eventService.makeEvent(amenityId);
     }
 }

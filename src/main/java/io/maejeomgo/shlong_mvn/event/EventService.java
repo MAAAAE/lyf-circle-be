@@ -6,4 +6,6 @@ public interface EventService {
     List<Event> getAllEvents();
 
     List<Event> makeEvents();
+
+    Event makeEvent(int amenityId);
 }

@@ -27,4 +27,5 @@ public class Event {
     private String description;
     private boolean hasNewMessages;
     private List<Detail> details;
+    private List<String> users;
 }
