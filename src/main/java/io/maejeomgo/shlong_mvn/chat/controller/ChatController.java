@@ -18,15 +18,12 @@ public class ChatController {
     private final ChatService chatService;
     private final UserService userService;
 
-    // 클라이언트가 "/app/chat.sendMessage/{eventId}"로 메시지를 보내면 이 메서드가 호출됩니다.
     @MessageMapping("/chat.sendMessage/{eventId}")
     public void sendMessage(@DestinationVariable String eventId, @Payload ChatMessageRequest chatMessageRequest) {
-        // 해당 이벤트의 구독자들에게 메시지를 전송합니다.
         chatMessageRequest.setEventId(eventId);
         chatService.sendAndSaveMessage(chatMessageRequest);
     }
 
-    // 클라이언트가 "/app/chat.addUser/{eventId}"로 메시지를 보내면 이 메서드가 호출됩니다.
     @MessageMapping("/chat.addUser/{eventId}")
     public void addUser(@DestinationVariable String eventId, @Payload ChatMessageRequest chatMessageRequest, SimpMessageHeaderAccessor headerAccessor) {
         String userId = chatMessageRequest.getSenderId();
