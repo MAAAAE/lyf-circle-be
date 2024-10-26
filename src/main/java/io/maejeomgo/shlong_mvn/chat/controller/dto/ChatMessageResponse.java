@@ -13,6 +13,7 @@ public class ChatMessageResponse {
     private String type;
     private String content;
     private String sender;
+    private String senderId;
     private String eventId;
     private LocalDateTime timestamp;
 }
