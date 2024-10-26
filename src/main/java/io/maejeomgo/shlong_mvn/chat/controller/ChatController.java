@@ -34,17 +34,12 @@ public class ChatController {
 
         if (chatService.isFirstTimeEntering(eventId, userId)) {
             chatMessageRequest.setType(ChatType.CHAT);
-            // TODO: User가 진입했을 때, AI가 채팅을 보내준다.
-            chatMessageRequest.setContent(aiResponse(userService.findUserNickNameById(userId)));
+            chatMessageRequest.setContent(String.format("[%s] has joined us—let's chat!!!", userService.findUserNickNameById(userId)));
             chatMessageRequest.setEventId(eventId);
             chatService.sendAndSaveMessage(chatMessageRequest);
             return;
         }
         chatService.sendChatHistoryToUser(eventId, userId);
-    }
-
-    private String aiResponse(String user) {
-        return String.format("[%s] has joined us—let's chat!!!", user);
     }
 }
 
