@@ -9,6 +9,6 @@ import lombok.Setter;
 public class ChatMessageRequest {
     private ChatType type;
     private String content;
-    private String sender;
+    private String senderId;
     private String eventId;
 }

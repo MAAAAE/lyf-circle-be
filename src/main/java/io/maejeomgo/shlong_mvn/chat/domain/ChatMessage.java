@@ -29,6 +29,9 @@ public class ChatMessage {
     private String sender;
 
     @Column(nullable = false)
+    private String senderId;
+
+    @Column(nullable = false)
     private String eventId;
 
     @Column(nullable = false)

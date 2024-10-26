@@ -5,6 +5,7 @@ import io.maejeomgo.shlong_mvn.chat.controller.dto.ChatMessageRequest;
 import io.maejeomgo.shlong_mvn.chat.controller.dto.ChatMessageResponse;
 import io.maejeomgo.shlong_mvn.chat.domain.ChatMessage;
 import io.maejeomgo.shlong_mvn.chat.domain.ChatMessageRepository;
+import io.maejeomgo.shlong_mvn.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,19 @@ import java.util.stream.Collectors;
 public class ChatService {
     private final ChatMessageRepository chatMessageRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final UserService userService;
 
     private static final String TOPIC = "/topic/";
     private static final String QUEUE_HISTORY = "/queue/history/";
 
     @Transactional
     public void sendAndSaveMessage(ChatMessageRequest chatMessageRequest) {
+        String senderName = userService.findUserNickNameById(chatMessageRequest.getSenderId());
         ChatMessage chatMessage = ChatMessage.builder()
                 .type(chatMessageRequest.getType())
                 .content(chatMessageRequest.getContent())
-                .sender(chatMessageRequest.getSender())
+                .sender(senderName)
+                .senderId(chatMessageRequest.getSenderId())
                 .eventId(chatMessageRequest.getEventId())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -47,7 +51,8 @@ public class ChatService {
 
     @Transactional(readOnly = true)
     public boolean isFirstTimeEntering(String eventId, String sender) {
-        return !chatMessageRepository.existsChatMessageByEventIdAndSender(eventId, sender);
+        String senderNickName = userService.findUserNickNameById(sender);
+        return !chatMessageRepository.existsChatMessageByEventIdAndSender(eventId, senderNickName);
     }
 
     public void sendChatHistoryToUser(String eventId, String sender) {
@@ -61,6 +66,7 @@ public class ChatService {
                 .content(chatMessage.getContent())
                 .eventId(chatMessage.getEventId())
                 .sender(chatMessage.getSender())
+                .senderId(chatMessage.getSenderId())
                 .timestamp(chatMessage.getTimestamp())
                 .build();
     }

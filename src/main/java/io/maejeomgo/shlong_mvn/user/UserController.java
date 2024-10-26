@@ -13,7 +13,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping("/user")
+    @PostMapping("/api/user")
     Users createUser(@RequestBody @Validated final CreateUserRequest createUserRequest) {
         return userService.createUser(createUserRequest);
     }
