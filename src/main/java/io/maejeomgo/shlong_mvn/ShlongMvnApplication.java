@@ -23,9 +23,12 @@ import java.util.Map;
 public class ShlongMvnApplication {
 
     private final boolean clearDataOnStartup;
+    private final boolean vectorClear;
 
-    public ShlongMvnApplication(@Value("${mongodb.clear-data-on-startup:false}") boolean clearDataOnStartup) {
+    public ShlongMvnApplication(@Value("${mongodb.clear-data-on-startup:false}") boolean clearDataOnStartup,
+                                @Value("${spring.ai.vectorstore.pgvector.remove-existing-vector-store-table}") boolean vectorClear) {
         this.clearDataOnStartup = clearDataOnStartup;
+        this.vectorClear = vectorClear;
     }
 
     public static void main(String[] args) {
@@ -49,21 +52,12 @@ public class ShlongMvnApplication {
         return args -> {
             clearMongoDb(mongoTemplate);
 
-            vectorStore.add(documents);
-            vectorStore.add(userDocuments);
+            if (vectorClear) {
+                vectorStore.add(documents);
+                vectorStore.add(userDocuments);
+                log.info("load init data to vector_store successfully.");
+            }
 
-//            vectorStore.similaritySearch("coworking place").forEach(doc -> {
-//                log.info("Similar Document: {}", doc.getContent());
-//            });
-//            vectorStore.similaritySearch("extrovert person").forEach(doc -> {
-//            vectorStore.add(userDocuments);
-//                log.info("Similar Document: {}", doc.getContent());
-//            });
-
-//			// Ingest the document into the vector store
-//			vectorStore.write(
-//					new TokenTextSplitter().transform(
-//							new TextReader(termsOfServiceDocs).read()));
         };
     }
 

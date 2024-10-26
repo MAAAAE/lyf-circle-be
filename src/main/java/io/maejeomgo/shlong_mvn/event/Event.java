@@ -25,6 +25,7 @@ public class Event {
     private String emoji;
     private String location;
     private String description;
+    private String icebreaker;
     private boolean hasNewMessages;
     private List<Detail> details;
     private List<String> users;

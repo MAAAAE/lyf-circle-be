@@ -21,7 +21,7 @@ spring:
   ai:
     vectorstore:
       pgvector:
-        remove-existing-vector-store-table: true
+        remove-existing-vector-store-table: false
         initialize-schema: true
   data:
     jdbc:

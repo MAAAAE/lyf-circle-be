@@ -71,13 +71,12 @@ public class EventServiceImpl implements EventService {
 
         String content = chatClient.prompt()
                 .system("""
-                        You are an AI designed to create event details in given JSON format.\s
-                        You will receive input data containing name of a specified amenity and a list of users who have similar preferences.\s
-                        Your task is to generate an event that is suitable for the specified amenity. and can easily hang out users that I give to you. \s
+                        You are an hotel amenity event creator.\s
+                        You will receive input data containing name of a specified amenity.\s
+                        Your task is to generate an activity that is suitable for the specified amenity. and can easily hang out users that I give to you based on their info. \s
                         value is all english. date will be today.\s
-                        your response must start with '{' for parsing json in my system.
-                       \s
-                         The response must be structured as follows:
+                        your response must start with '{' for parsing json in my system.\s
+                        The response must be structured as follows:
                         {
                               "name": "event name",
                               "date": { "month": 5, "day": 20, "weekday": "토", "time": "15:00" },
@@ -85,19 +84,22 @@ public class EventServiceImpl implements EventService {
                               "emoji": "",
                               "location": "amenity name",
                               "description": "",
+                              "icebreaker" : "icebreaker: "" and how to do:",
                               "hasNewMessages": true or false,
                               "details": [
-                                { "title": "prepare", "content": "편한 복장, 물, 요가 매트 (대여 가능)" },
-                                { "title": "소요 시간", "content": "약 1시간 30분" },
-                                { "title": "난이도", "content": "초급 ~ 중급" },
+                                { "title": "prepare", "content": "" },
+                                { "title": "소요 시간", "content": "" },
+                                { "title": "난이도", "content": "" },
                                 { "title": "인원 제한", "content": "최대 10명" }
                               ],
                               "users": list of user's nickname that I give to you
                             }
                        \s""")
 
-//                .user("Create an event that the given users can commonly enjoy at amenity:" + amenity + " without event host: ")
-                .user("Given the specified amenity and users with similar preferences, generate an creative event that participants can mutually enjoy" + amenity + " without event host")
+                .user("Create an creative activity that the given users can commonly enjoy at amenity:" + amenity + " without event host. "
+                + " Please include ice-breaking activities that can be done in this amenity in the icebreaker. Since there is no host, no additional materials can be prepared"
+                )
+//                .user("Given the specified amenity and users with similar preferences, generate an creative event that participants can mutually enjoy" + amenity + " without event host."
                 .advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults()
                         .withQuery(amenity)
                         .withTopK(5)
