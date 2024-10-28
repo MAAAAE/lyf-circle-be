@@ -46,12 +46,12 @@ class EventController {
     }
     @PostMapping("/event/all")
     List<Event> makeNewEvents() {
-        log.info("make new events..");
+        log.info("[openAI] make new events..");
         return eventService.makeEvents();
     }
     @PostMapping("/event/{amenityId}")
     Event makeNewEvent(@PathVariable @PositiveOrZero int amenityId) {
-        log.info("make new events for {}", amenityId);
+        log.info("[lyf circle API] event creation request received! amenity: {}", amenityId);
 
         return eventService.makeEvent(amenityId);
     }

@@ -36,7 +36,7 @@ public class ChatController {
             Users userOrThrow = userService.getUserOrThrow(userId);
             String username = userOrThrow.getUsername();
             chatMessageRequest.setType(ChatType.CHAT);
-            chatMessageRequest.setContent(getWelComeMessageFormat(username, userOrThrow));
+            chatMessageRequest.setContent(getWelComeMessageFormat(userOrThrow.getNickname(), userOrThrow));
             chatMessageRequest.setSenderId("ai");
             chatMessageRequest.setEventId(eventId);
             chatService.sendAndSaveMessage(chatMessageRequest);

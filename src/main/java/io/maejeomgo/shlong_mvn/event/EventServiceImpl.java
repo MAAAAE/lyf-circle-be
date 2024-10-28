@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
@@ -63,6 +64,7 @@ public class EventServiceImpl implements EventService {
     public Event makeEvent(int amenityId) {
         Amenity amenity = amenityRepository.findById(amenityId)
                 .orElseThrow(() -> new RuntimeException("amenity not found"));
+        log.info("[lyf circle API] creation starts for {}...", amenity.getTitle());
         return createEvent(amenity.getTitle());
     }
 
@@ -70,39 +72,15 @@ public class EventServiceImpl implements EventService {
     private Event createEvent(String amenity) {
         FilterExpressionBuilder b = new FilterExpressionBuilder();
 
-        String content = chatClient.prompt()
-                .system("""
-                        You are an hotel amenity event creator.\s
-                        You will receive input data containing name of a specified amenity.\s
-                        Your task is to generate an social activity that is suitable for the specified amenity. and can easily hang out users that I give to you based on their info. \s
-                        value is all english. date will be today.\s
-                        listeners are people who wants to join your event.\s
-                        your response must starts with '{' for parsing json in my system.\s
-                        The response must be structured as follows:
-                        {
-                              "name": "event name",
-                              "date": { "month": "integer", "day": "integer", "weekday": "string", "time": "string" },
-                              "participants": the number of users,
-                              "emoji": "",
-                              "location": "amenity name",
-                              "description": "",
-                              "icebreaker" : "icebreaker: "" and how to do:",
-                              "hasNewMessages": true or false,
-                              "users": list of user's nickname that I give to you
-                            }
-                       \s""")
-
-                .user("Create an creative social activity that the given users can commonly enjoy at amenity:" + amenity + " without event host. "
-                + " Please include ice-breaking activities that can be done in this amenity in the icebreaker. Since there is no host, no additional materials can be prepared"
-                )
-//                .user("Given the specified amenity and users with similar preferences, generate an creative event that participants can mutually enjoy" + amenity + " without event host."
-                .advisors(new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults()
-                        .withQuery(amenity)
-                        .withTopK(10)
-                        .withSimilarityThreshold(0.5)
-                        .withFilterExpression(b.eq("type", "user").build())))
-                .call()
-                .content();
+        SearchRequest searchRequest = SearchRequest.defaults()
+                .withQuery(amenity)
+                .withTopK(10)
+                .withSimilarityThreshold(0.5)
+                .withFilterExpression(b.eq("type", "user").build());
+        QuestionAnswerAdvisor advisor = new QuestionAnswerAdvisor(vectorStore, searchRequest);
+        log.info("[lyf Circle API] embedding vector search request: {}", searchRequest.toString());
+        ChatClient.ChatClientRequestSpec call = getCall(amenity, advisor);
+        String content = call.call().content();
 
 
         Event entity = saveJsonToMongo(content);
@@ -114,10 +92,44 @@ public class EventServiceImpl implements EventService {
         return null;
     }
 
+    private ChatClient.ChatClientRequestSpec getCall(String amenity, QuestionAnswerAdvisor advisor) {
+        return chatClient.prompt()
+                .system("""
+                         You are an hotel amenity event creator.\s
+                         You will receive input data containing name of a specified amenity.\s
+                         Your task is to generate an social activity that is suitable for the specified amenity. and can easily hang out users that I give to you based on their info. \s
+                         value is all english. date will be today.\s
+                         listeners are people who wants to join your event.\s
+                         your response must starts with '{' for parsing json in my system.\s
+                         don't add "```json ```" in your response.\s
+                         The response must be structured as follows:
+                         {
+                               "name": "event name",
+                               "date": { "month": "integer", "day": "integer", "weekday": "string", "time": "string" },
+                               "participants": the number of users,
+                               "emoji": "",
+                               "location": "amenity name",
+                               "description": "",
+                               "icebreaker" : "icebreaker: "" and how to do:",
+                               "hasNewMessages": true or false,
+                               "users": list of user's nickname that I give to you
+                             }
+                        \s""")
+
+                .user("Create an creative social activity that the given users can commonly enjoy at amenity:" + amenity + " without event host. "
+                        + " Please include ice-breaking activities that can be done in this amenity in the icebreaker. Since there is no host, no additional materials can be prepared"
+                )
+                .advisors(advisor)
+                ;
+    }
+
     public Event saveJsonToMongo(String jsonString) {
         try {
             // Convert JSON string to POJO
+            log.info("[lyf circle API] generative model gives this response with JSON.");
+            log.info("================================================================");
             log.info(jsonString);
+            log.info("================================================================");
             return objectMapper.readValue(jsonString, Event.class);
         } catch (Exception e) {
             e.printStackTrace();

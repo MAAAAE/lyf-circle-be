@@ -1,5 +1,7 @@
 package io.maejeomgo.shlong_mvn.user;
 
+import com.github.javafaker.Faker;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,26 +11,15 @@ public class MockUserGenerator {
 
     // 취미 리스트
     private static final List<String> hobbies = Arrays.asList(
-            "Yoga",                   // Gym에서 할 수 있는 운동
-            "Swimming",               // 수영장에서 할 수 있는 활동
-            "Cooking",                // 공유 주방에서 할 수 있는 취미
-            "Meal prepping",          // 공유 주방에서 할 수 있는 식사 준비
-            "Group workouts",         // Gym에서 하는 그룹 운동
-            "Reading",                // Co-working room에서 할 수 있는 독서
-            "Writing",                // Co-working room에서 할 수 있는 글쓰기
-            "Coding",                 // Co-working room에서 할 수 있는 프로그래밍
-            "Freelancing",            // Co-working room에서 할 수 있는 프리랜서 작업
-            "Networking",             // Co-working room에서 네트워킹 활동
-            "Meditation",             // 수영장이나 Gym, Co-working room에서 할 수 있는 명상
-            "Pilates",                // Gym에서 할 수 있는 필라테스
-            "Weightlifting",          // Gym에서 할 수 있는 웨이트 트레이닝
-            "Cycling",                // Gym에서 사이클링
-            "Photography",            // 여행과 라이프스타일을 기록하는 취미
-            "Gaming",                 // 여가 시간에 즐길 수 있는 게임
-            "Socializing",            // Co-working room이나 공유 주방에서 사람들과 소통
-            "Movie watching",         // 여가 시간에 즐기는 영화 감상
-            "Hiking",                 // 근처 자연에서 할 수 있는 하이킹
-            "Board games"             // Co-working room이나 공유 공간에서 즐길 수 있는 보드게임
+            "Reading",
+            "Gaming",
+            "Coding",
+            "Language Exchange",
+            "Cooking",
+            "Weight lifting",
+            "Yoga",
+            "Music",
+            "Party"
     );
 
     // 성향 리스트
@@ -72,10 +63,11 @@ public class MockUserGenerator {
         Random random = new Random();
 
         for (int i = 0; i < 100; i++) {
-            String username = "user_" + (i + 1);
+            Faker faker = new Faker();
+            String username = faker.name().username();
+            System.out.println("Random Username: " + username);
             String password = "password" + (i + 1);
-            String nickname = "nickname_" + (i + 1);
-            // 나라를 적절히 분배
+            String nickname = username;
 
             // 랜덤으로 2~3개의 취미 선택
             List<String> userHobbies = getRandomItems(hobbies, 2 + random.nextInt(2), random);

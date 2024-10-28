@@ -44,5 +44,7 @@ server:
 
 mongodb:
   clear-data-on-startup: false
-
+logging:
+  pattern:
+    console: "%-5level - %msg%n"
 
