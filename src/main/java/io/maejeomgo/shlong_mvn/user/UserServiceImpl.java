@@ -22,6 +22,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Users getUserOrThrow(final String id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("User Not Found! %s", id)));
+    }
+
+    @Override
     public String findUserNickNameById(String id) {
         Users user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("User Not Found! %s", id)));

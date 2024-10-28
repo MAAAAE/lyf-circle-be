@@ -1,10 +1,7 @@
 package io.maejeomgo.shlong_mvn.event;
 
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -29,4 +26,6 @@ public class Event {
     private boolean hasNewMessages;
     private List<Detail> details;
     private List<String> users;
+    @Setter
+    private LocalDateTime createdAt;
 }

@@ -23,6 +23,7 @@ spring:
       pgvector:
         remove-existing-vector-store-table: false
         initialize-schema: true
+
   data:
     jdbc:
       dialect: postgresql

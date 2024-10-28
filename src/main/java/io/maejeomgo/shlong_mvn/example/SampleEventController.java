@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-class EventController {
+class SampleEventController {
 
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
 
-    @GetMapping("/event/create")
+    @GetMapping("/sample/event/create")
     String generateEvent(@RequestParam(value = "prompt", defaultValue = "make a 3 events.") String userInput) {
         return this.chatClient.prompt()
                 .system("""

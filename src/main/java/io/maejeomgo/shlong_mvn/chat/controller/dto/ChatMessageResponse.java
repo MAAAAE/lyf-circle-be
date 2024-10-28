@@ -15,5 +15,6 @@ public class ChatMessageResponse {
     private String sender;
     private String senderId;
     private String eventId;
+    private String avatar;
     private LocalDateTime timestamp;
 }
