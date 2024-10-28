@@ -1,5 +1,7 @@
 package io.maejeomgo.shlong_mvn.user;
 
+import com.github.javafaker.Faker;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,28 +9,40 @@ import java.util.Random;
 
 public class MockUserGenerator {
 
-    // 취미 및 성향 데이터
+    // 취미 리스트
     private static final List<String> hobbies = Arrays.asList(
-            "Improving work productivity", "Time management", "Project management", "Freelance networking",
-            "Startup founding", "Project collaboration", "Creative idea brainstorming", "Problem solving",
-            "Design thinking", "Meditation", "Yoga", "Psychological well-being", "Learning IT skills",
-            "Exploring the latest tech trends", "Software development", "Watching movies", "Relaxation",
-            "Social activities", "Fashion", "Reusing items", "Environmental protection", "Social conversation",
-            "Meeting new people", "Small talk activities", "Beer tasting", "Light conversation", "Leisure time",
-            "Playing games", "Fun activities", "Social events", "International cuisine", "Sharing food",
-            "Cultural exchange", "Cooking", "Learning new recipes", "Improving cooking skills", "Sharing recipes",
-            "Exploring new foods", "Breakfast", "Wine tasting", "Fine dining", "Fitness challenges", "Exercise",
-            "Maintaining health", "Stretching", "Jogging", "Outdoor activities", "Dance", "Fitness", "Music",
-            "Health management", "Nutrition"
+            "Reading",
+            "Gaming",
+            "Coding",
+            "Language Exchange",
+            "Cooking",
+            "Weight lifting",
+            "Yoga",
+            "Music",
+            "Party"
     );
 
+    // 성향 리스트
     private static final List<String> characteristics = Arrays.asList(
-            "Goal-oriented", "Highly focused", "Cooperative", "Sociable", "Independent", "Innovative",
-            "Creative", "Open-minded", "Curious", "Introverted", "Skilled in stress management", "Calm",
-            "Knowledge-seeking", "Logical", "Prefers a comfortable environment", "Relaxed", "Environmentally conscious",
-            "Friendly", "Casual", "Competitive", "Appreciates diverse cultures", "Passionate about learning",
-            "Detail-oriented", "Collaborative", "Enjoys sharing", "Morning person", "Sophisticated", "Active",
-            "Enjoys nature", "Energetic", "Fun-loving", "Attentive to self-care", "Focused on self-development"
+            "Goal-oriented",           // 목표 지향적인 성향
+            "Sociable",                // 사람들과 교류하기 좋아하는 성향
+            "Collaborative",           // 다른 사람들과 협업을 잘하는 성향
+            "Active",                  // 신체적으로 활발한 성향
+            "Creative",                // 창의적인 성향
+            "Focused on self-development", // 자기 계발에 집중하는 성향
+            "Attentive to self-care",   // 자기 관리에 신경 쓰는 성향
+            "Relaxed",                 // 여유롭고 스트레스 관리가 잘 되는 성향
+            "Detail-oriented",         // 세부 사항에 신경 쓰는 성향
+            "Adventurous",             // 새로운 것에 도전하는 성향
+            "Competitive",             // 경쟁심이 강한 성향
+            "Independent",             // 혼자서도 잘 하는 성향
+            "Curious",                 // 새로운 것을 배우고자 하는 성향
+            "Environmentally conscious", // 환경에 대한 의식이 있는 성향
+            "Friendly",                // 친화력이 좋은 성향
+            "Organized",               // 정리 정돈을 잘하는 성향
+            "Fun-loving",              // 재미를 추구하는 성향
+            "Logical",                 // 논리적이고 이성적인 성향
+            "Ambitious"                // 야망이 있는 성향
     );
 
     // 추가: 언어 데이터
@@ -49,10 +63,11 @@ public class MockUserGenerator {
         Random random = new Random();
 
         for (int i = 0; i < 100; i++) {
-            String username = "user_" + (i + 1);
+            Faker faker = new Faker();
+            String username = faker.name().username();
+            System.out.println("Random Username: " + username);
             String password = "password" + (i + 1);
-            String nickname = "nickname_" + (i + 1);
-            // 나라를 적절히 분배
+            String nickname = username;
 
             // 랜덤으로 2~3개의 취미 선택
             List<String> userHobbies = getRandomItems(hobbies, 2 + random.nextInt(2), random);

@@ -49,12 +49,13 @@ public class Users {
                 this.getHobbies() != null ? String.join(", ", this.getHobbies()) : "None",
                 this.getCharacteristics() != null ? String.join(", ", this.getCharacteristics()) : "None");
 
-        return new org.springframework.ai.document.Document(content, toMap());
+        return new org.springframework.ai.document.Document(content, toMetaMap());
 
     }
 
-    public Map<String, Object> toMap() {
+    public Map<String, Object> toMetaMap() {
         return Map.of(
+                "type", "user",
                 "id", id,
                 "username", username,
                 "password", password,

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChatService {
+    private static final String AI_AVATAR_SRC = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/lyf-avatar-tyQsPYtUM3rhuC06Vl0WKayntr1KIV.webp";
     private final ChatMessageRepository chatMessageRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserService userService;
@@ -27,7 +28,10 @@ public class ChatService {
 
     @Transactional
     public void sendAndSaveMessage(ChatMessageRequest chatMessageRequest) {
-        String senderName = userService.findUserNickNameById(chatMessageRequest.getSenderId());
+        String senderName = chatMessageRequest.getSenderId();
+        if (!"ai".equals(senderName)) {
+            senderName = userService.findUserNickNameById(chatMessageRequest.getSenderId());
+        }
         ChatMessage chatMessage = ChatMessage.builder()
                 .type(chatMessageRequest.getType())
                 .content(chatMessageRequest.getContent())
@@ -68,6 +72,7 @@ public class ChatService {
                 .sender(chatMessage.getSender())
                 .senderId(chatMessage.getSenderId())
                 .timestamp(chatMessage.getTimestamp())
+                .avatar("ai".equals(chatMessage.getSender()) ? AI_AVATAR_SRC : null)
                 .build();
     }
 }
