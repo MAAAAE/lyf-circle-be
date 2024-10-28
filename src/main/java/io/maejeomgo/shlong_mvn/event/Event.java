@@ -24,8 +24,22 @@ public class Event {
     private String description;
     private String icebreaker;
     private boolean hasNewMessages;
-    private List<Detail> details;
     private List<String> users;
     @Setter
     private LocalDateTime createdAt;
+
+    public EventDto to() {
+        return EventDto.builder()
+                .id(id)
+                .name(name)
+                .date(date)
+                .participants(users)
+                .emoji(emoji)
+                .location(location)
+                .description(description)
+                .icebreaker(icebreaker)
+                .hasNewMessages(hasNewMessages)
+                .createdAt(createdAt)
+                .build();
+    }
 }

@@ -39,15 +39,14 @@ class EventController {
     }
 
     @GetMapping("/event")
-    List<Event> getAllEvents() {
+    List<EventDto> getAllEvents() {
         log.info("get all events");
 
-        return eventService.getAllEvents();
+        return eventService.getAllEvents().stream().map(Event::to).toList();
     }
     @PostMapping("/event/all")
     List<Event> makeNewEvents() {
         log.info("make new events..");
-
         return eventService.makeEvents();
     }
     @PostMapping("/event/{amenityId}")
