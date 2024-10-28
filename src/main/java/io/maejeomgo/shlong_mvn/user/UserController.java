@@ -1,6 +1,5 @@
 package io.maejeomgo.shlong_mvn.user;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +13,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping("/user")
+    @PostMapping("/api/user")
     Users createUser(@RequestBody @Validated final CreateUserRequest createUserRequest) {
         return userService.createUser(createUserRequest);
     }
