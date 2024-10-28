@@ -1,6 +1,6 @@
 spring:
   application:
-    name: shlong-mvn
+    name: lyf-circle
 
 #  ai:
 #    openai:
